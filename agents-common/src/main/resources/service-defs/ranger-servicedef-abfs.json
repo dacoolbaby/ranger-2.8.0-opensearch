@@ -1,0 +1,71 @@
+{
+  "id":          103,
+  "name":        "abfs",
+  "displayName": "abfs",
+  "implClass":   "",
+  "label":       "Azure Blob File System",
+  "description": "Ranger plugin for ABFS",
+  "guid":        "",
+  "options":     { "enableDenyAndExceptionsInPolicies": "true" },
+  "resources": [
+    {
+      "itemId":         1,
+      "name":           "storageaccount",
+      "parent":         "",
+      "level":          10,
+      "type":           "string",
+      "mandatory":      true,
+      "matcher":        "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions": { "wildCard": true, "ignoreCase": false },
+      "label":          "Storage Account",
+      "description":    "Storage Account for the Path"
+    },
+    {
+      "itemId":         2,
+      "name":           "container",
+      "parent":         "storageaccount",
+      "level":          20,
+      "type":           "string",
+      "mandatory":      true,
+      "matcher":        "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions": { "wildCard": true, "ignoreCase": false },
+      "label":          "Storage Account Container",
+      "description":    "Storage Account Container for the Path"
+    },
+    {
+      "itemId":            3,
+      "name":              "relativepath",
+      "parent":            "container",
+      "level":              30,
+      "type":               "path",
+      "mandatory":          true,
+      "lookupSupported":    true,
+      "recursiveSupported": true,
+      "matcher":            "org.apache.ranger.plugin.resourcematcher.RangerPathResourceMatcher",
+      "matcherOptions":     { "wildCard": true, "ignoreCase": false },
+      "validationRegEx":    "^[/*]$|^\/.*?[^\/]$",
+      "validationMessage":  "Relative Path must not end with a slash",
+      "label":              "Relative Path",
+      "description":        "Relative Path inside Storage Account Container"
+    }
+  ],
+  "accessTypes": [
+    { "itemId": 1, "name": "read",  "label": "Read",  "category": "READ" },
+    { "itemId": 2, "name": "write", "label": "Write", "category": "UPDATE" }
+  ],
+  "configs": [
+    { "itemId": 1, "name": "username",                 "type": "string", "mandatory": false, "label": "Username" },
+    { "itemId": 2, "name": "password",                 "type": "string", "mandatory": false, "label": "Password" },
+    { "itemId": 3, "name": "commonNameForCertificate", "type": "string", "mandatory": false, "label": "Common Name for Certificate" }
+  ],
+  "policyConditions": [
+    {
+      "itemId":      1,
+      "name":        "ip-range",
+      "evaluator":   "org.apache.ranger.plugin.conditionevaluator.RangerIpMatcher",
+      "label":       "IP Address Range",
+      "description": "IP Address Range",
+      "uiHint" :     "{ \"isMultiValue\":true }"
+    }
+  ]
+}

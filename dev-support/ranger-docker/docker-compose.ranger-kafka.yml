@@ -1,0 +1,41 @@
+services:
+  ranger-kafka:
+    build:
+      context: .
+      dockerfile: Dockerfile.ranger-kafka
+      args:
+        - RANGER_BASE_IMAGE=${RANGER_BASE_IMAGE}
+        - RANGER_BASE_VERSION=${RANGER_BASE_VERSION}
+        - KAFKA_VERSION=${KAFKA_VERSION}
+        - KAFKA_PLUGIN_VERSION=${KAFKA_PLUGIN_VERSION}
+        - KERBEROS_ENABLED=${KERBEROS_ENABLED}
+    image: ranger-kafka
+    container_name: ranger-kafka
+    hostname: ranger-kafka.rangernw
+    volumes:
+      - ./dist/keytabs/ranger-kafka:/etc/keytabs
+      - ./scripts/kdc/krb5.conf:/etc/krb5.conf:ro
+      - ./scripts/hadoop/core-site.xml:/home/ranger/scripts/core-site.xml:ro
+      - ./scripts/hadoop/hdfs-client-site.xml:/home/ranger/scripts/hdfs-site.xml:ro
+      - ./scripts/kafka/kafka-server-jaas.conf:/home/ranger/scripts/kafka-server-jaas.conf
+      - ./dist/version:/home/ranger/dist/version:ro
+      - ./scripts/kafka/ranger-kafka-plugin-install.properties:/opt/ranger/ranger-kafka-plugin/install.properties
+    stdin_open: true
+    tty: true
+    networks:
+      - ranger
+    ports:
+      - "6667:6667"
+    depends_on:
+      ranger:
+        condition: service_started
+      ranger-zk:
+        condition: service_started
+    environment:
+      - KAFKA_VERSION
+      - KAFKA_PLUGIN_VERSION
+      - KERBEROS_ENABLED
+
+networks:
+  ranger:
+    name: rangernw

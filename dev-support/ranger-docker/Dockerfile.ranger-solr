@@ -1,0 +1,45 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+ARG RANGER_BASE_IMAGE
+ARG RANGER_BASE_VERSION
+ARG SOLR_VERSION
+FROM ${RANGER_BASE_IMAGE}:${RANGER_BASE_VERSION} AS ranger-base
+FROM solr:${SOLR_VERSION}
+
+ARG SOLR_PLUGIN_VERSION
+
+USER root
+
+RUN apt update && DEBIAN_FRONTEND="noninteractive" apt-get install -y krb5-user
+
+RUN mkdir -p /opt/solr/server/solr/configsets/ranger_audits/conf /home/ranger/dist /opt/ranger /home/ranger/scripts
+RUN chown -R solr:solr /opt/solr/server/solr/configsets/ranger_audits/
+
+COPY --from=ranger-base /home/ranger/scripts/wait_for_keytab.sh             /home/ranger/scripts/wait_for_keytab.sh
+COPY --from=ranger-base /home/ranger/scripts/wait_for_testusers_keytab.sh   /home/ranger/scripts/wait_for_testusers_keytab.sh
+
+# Copy Ranger plugin
+COPY ./dist/ranger-${SOLR_PLUGIN_VERSION}-solr-plugin.tar.gz /home/ranger/dist/
+
+RUN tar xvfz /home/ranger/dist/ranger-${SOLR_PLUGIN_VERSION}-solr-plugin.tar.gz --directory=/opt/ranger && \
+    ln -s /opt/ranger/ranger-${SOLR_PLUGIN_VERSION}-solr-plugin /opt/ranger/ranger-solr-plugin && \
+    rm -f /home/ranger/dist/ranger-${SOLR_PLUGIN_VERSION}-solr-plugin.tar.gz && \
+    rm -f /opt/ranger/ranger-solr-plugin/install.properties && \
+    chown -R solr:solr /opt/ranger
+
+ENTRYPOINT [ "/opt/ranger/ranger-solr.sh" ]
+CMD ["solr-foreground"]

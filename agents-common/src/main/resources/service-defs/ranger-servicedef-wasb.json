@@ -1,0 +1,60 @@
+{
+  "id":          101,
+  "name":        "wasb",
+  "displayName": "wasb",
+  "implClass":   "",
+  "label":       "WASB File System",
+  "description": "Ranger plugin for WASB File System",
+  "guid":        "",
+  "options":     { "enableDenyAndExceptionsInPolicies": "true" },
+  "resources": [
+    {
+      "itemId":         1,
+      "name":           "storageaccount",
+      "parent":         "",
+      "level":          10,
+      "type":           "string",
+      "mandatory":      true,
+      "matcher":        "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions": { "wildCard": true, "ignoreCase": false },
+      "label":          "Storage Account",
+      "description":    "Storage Account for the Path"
+    },
+    {
+      "itemId":         2,
+      "name":           "container",
+      "parent":         "storageaccount",
+      "level":          20,
+      "type":           "string",
+      "mandatory":      true,
+      "matcher":        "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions": { "wildCard": true, "ignoreCase": false },
+      "label":          "Storage Account Container",
+      "description":    "Storage Account Container for the Path"
+    },
+    {
+     "itemId":              3,
+      "name":               "relativepath",
+      "parent":             "container",
+      "level":              30,
+      "type":               "path",
+      "mandatory":          true,
+      "lookupSupported":    true,
+      "recursiveSupported": true,
+      "matcher":            "org.apache.ranger.plugin.resourcematcher.RangerPathResourceMatcher",
+      "matcherOptions":     { "wildCard": true, "ignoreCase": false },
+      "validationRegEx":    "^[/*]$|^\/.*?[^\/]$",
+      "validationMessage":  "Relative Path must not end with a slash",
+      "label":              "Relative Path",
+      "description":        "Relative Path inside Storage Account Container"
+    }
+  ],
+  "accessTypes": [
+    { "itemId": 1, "name": "read",  "label": "Read",  "category": "READ" },
+    { "itemId": 2, "name": "write", "label": "Write", "category": "UPDATE" }
+  ],
+  "configs": [
+    { "itemId": 1, "name": "username",                 "type": "string", "mandatory": false, "label": "Username" },
+    { "itemId": 2, "name": "commonNameForCertificate", "type": "string", "mandatory": false, "label": "Common Name for Certificate" }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "id":          202,
+  "name":        "schema-registry",
+  "implClass":   "org.apache.ranger.services.schema.registry.RangerServiceSchemaRegistry",
+  "label":       "Schema Registry",
+  "description": "Schema Registry",
+  "resources": [
+    {
+      "itemId":            1,
+      "name":              "registry-service",
+      "parent":            "",
+      "level":             10,
+      "type":              "string",
+      "mandatory":         true,
+      "lookupSupported":   true,
+      "excludesSupported": true,
+      "matcher":           "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions":    { "wildCard": true, "ignoreCase": true },
+      "label":             "Schema Registry Service",
+      "description":       "Schema Registry Service"
+    },
+    {
+      "itemId":           2,
+      "name":             "schema-group",
+      "parent":            "",
+      "level":             10,
+      "type":              "string",
+      "mandatory":         true,
+      "lookupSupported":   true,
+      "excludesSupported": true,
+      "matcher":           "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions":    { "wildCard": true, "ignoreCase": true },
+      "label":             "Schema Group",
+      "description":       "Schema Group"
+    },
+    {
+      "itemId":            3,
+      "name":              "schema-metadata",
+      "parent":            "schema-group",
+      "level":             20,
+      "type":              "string",
+      "mandatory":         true,
+      "lookupSupported":   true,
+      "excludesSupported": true,
+      "matcher":           "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions":    { "wildCard": true, "ignoreCase": true },
+      "label":             "Schema Name",
+      "description":       "Schema Name",
+      "isValidLeaf":       "true"
+    },
+    {
+      "itemId":            4,
+      "name":              "schema-branch",
+      "parent":            "schema-metadata",
+      "level":             30,
+      "type":              "string",
+      "mandatory":         true,
+      "lookupSupported":   true,
+      "excludesSupported": true,
+      "matcher":           "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions":    { "wildCard": true, "ignoreCase": true },
+      "label":             "Schema Branch",
+      "description":       "Schema Branch",
+      "isValidLeaf":       "true"
+    },
+    {
+      "itemId":            5,
+      "name":              "schema-version",
+      "parent":            "schema-branch",
+      "level":             40,
+      "type":              "string",
+      "mandatory":         true,
+      "lookupSupported":   true,
+      "excludesSupported": true,
+      "matcher":           "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions":    { "wildCard": true, "ignoreCase": true },
+      "label":             "Schema Version",
+      "description":       "Schema Version"
+    },
+    {
+      "itemId":            6,
+      "name":              "serde",
+      "parent":            "",
+      "level":             10,
+      "type":              "string",
+      "mandatory":         true,
+      "lookupSupported":   true,
+      "excludesSupported": true,
+      "matcher":           "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions":    { "wildCard": true, "ignoreCase": true },
+      "label":             "Serializer/Deserializer",
+      "description":       "Serializer/Deserializer"
+    }
+  ],
+  "accessTypes": [
+    { "itemId": 1, "name": "create", "label": "Create", "category": "CREATE" },
+    { "itemId": 2, "name": "read",   "label": "Read",   "category": "READ" },
+    { "itemId": 3, "name": "update", "label": "Update", "category": "UPDATE" },
+    { "itemId": 4, "name": "delete", "label": "Delete", "category": "DELETE" }
+  ],
+  "configs": [
+    { "itemId": 1, "name": "schema.registry.url",            "type": "string", "mandatory": true,  "label": "Schema Registry URL",          "defaultValue": "" },
+    { "itemId": 2, "name": "schema-registry.authentication", "type": "enum",   "mandatory": true,  "label": "Authentication Type",          "defaultValue": "KERBEROS", "subType": "authType" },
+    { "itemId": 3, "name": "commonNameForCertificate",       "type": "string", "mandatory": false, "label": "Ranger Plugin SSL CName" },
+    { "itemId": 4, "name": "ranger.plugin.audit.filters",    "type": "string", "mandatory": false, "label": "Ranger Default Audit Filters", "defaultValue": "[]" }
+  ],
+  "enums":
+  [
+    {
+      "itemId": 1, "name": "authType", "defaultIndex": 0,
+      "elements": [
+        { "itemId": 1, "name": "NONE",     "label": "None" },
+        { "itemId": 2, "name": "KERBEROS", "label": "Kerberos" }
+      ]
+    }
+  ],
+  "policyConditions":
+  [
+    {
+      "itemId":      1,
+      "name":        "ip-range",
+      "evaluator":   "org.apache.ranger.plugin.conditionevaluator.RangerIpMatcher",
+      "label":       "IP Address Range",
+      "description": "IP Address Range",
+      "uiHint" :     "{ \"isMultiValue\":true }"
+    }
+  ]
+}

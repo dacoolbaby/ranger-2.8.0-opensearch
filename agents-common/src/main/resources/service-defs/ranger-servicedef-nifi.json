@@ -1,0 +1,49 @@
+{
+  "id":          10,
+  "name":        "nifi",
+  "displayName": "nifi",
+  "implClass":   "org.apache.ranger.services.nifi.RangerServiceNiFi",
+  "label":       "NIFI",
+  "description": "NiFi",
+  "options":     { "enableDenyAndExceptionsInPolicies": "false" },
+  "resources":[
+    {
+      "itemId":          100,
+      "name":            "nifi-resource",
+      "parent":          "",
+      "level":           10,
+      "type":            "string",
+      "mandatory":       true,
+      "lookupSupported": true,
+      "matcher":         "org.apache.ranger.plugin.resourcematcher.RangerDefaultResourceMatcher",
+      "matcherOptions":  { "wildCard": true, "ignoreCase": true },
+      "label":           "NiFi Resource Identifier",
+      "description":     "NiFi Resource"
+    }
+  ],
+  "accessTypes":[
+    { "itemId":100, "name": "READ",  "label": "Read",  "category": "READ" },
+    { "itemId":200, "name": "WRITE", "label": "Write", "category": "UPDATE" }
+  ],
+  "configs":[
+    { "itemId": 400, "name": "nifi.url",                     "type": "string",   "mandatory": true,  "label": "NiFi URL",                         "defaultValue": "http://localhost:8080/nifi-api/resources", "uiHint": "{\"TextFieldWithIcon\":true, \"info\": \"The URL of the NiFi REST API that provides the available resources.\"}" },
+    { "itemId": 410, "name": "nifi.authentication",          "type": "enum",     "mandatory": true,  "label": "Authentication Type",              "defaultValue": "NONE", "subType": "authType" },
+    { "itemId": 411, "name": "nifi.ssl.use.default.context", "type": "bool",     "mandatory": true,  "label": "Use Ranger's Default SSL Context", "defaultValue": "false", "subType": "YesTrue:NoFalse", "uiHint": "{\"TextFieldWithIcon\":true, \"info\": \"If true, then Ranger's keystore and truststore will be used to communicate with NiFi. If false, the keystore and truststore properties must be provided.\"}" },
+    { "itemId": 500, "name": "nifi.ssl.keystore",            "type": "string",   "mandatory": false, "label": "Keystore",                         "defaultValue": "" },
+    { "itemId": 510, "name": "nifi.ssl.keystoreType",        "type": "string",   "mandatory": false, "label": "Keystore Type",                    "defaultValue": "" },
+    { "itemId": 520, "name": "nifi.ssl.keystorePassword",    "type": "password", "mandatory": false, "label": "Keystore Password",                "defaultValue": "" },
+    { "itemId": 530, "name": "nifi.ssl.truststore",          "type": "string",   "mandatory": false, "label": "Truststore",                       "defaultValue": "" },
+    { "itemId": 540, "name": "nifi.ssl.truststoreType",      "type": "string",   "mandatory": false, "label": "Truststore Type",                  "defaultValue": "" },
+    { "itemId": 550, "name": "nifi.ssl.truststorePassword",  "type": "password", "mandatory": false, "label": "Truststore Password",              "defaultValue": "" },
+    { "itemId": 560, "name": "ranger.plugin.audit.filters",  "type": "string",   "mandatory": false, "label": "Ranger Default Audit Filters",     "defaultValue": "[]" }
+  ],
+  "enums": [
+      {
+        "itemId": 1, "name": "authType", "defaultIndex": 0,
+        "elements": [
+          { "itemId": 1, "name": "NONE", "label": "None" },
+          { "itemId": 2, "name": "SSL",  "label": "SSL" }
+        ]
+      }
+  ]
+}
