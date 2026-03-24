@@ -435,7 +435,7 @@ public class OpenSearchAuditDestination extends AuditDestination {
             try {
                 exists = restHighLevelClient.indices().open(new OpenIndexRequest(this.index), RequestOptions.DEFAULT).isShardsAcknowledged();
             } catch (Exception e) {
-                LOG.warn("Error validating index {}", this.index);
+                LOG.debug("Unable to validate index '{}' during startup", this.index, e);
             }
 
             if (exists) {
